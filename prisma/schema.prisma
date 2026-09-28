@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// ℹ️ Generates a typed Prisma Client inside /generated/prisma (run `npm run db:generate`)
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+// ℹ️ The connection URL lives in prisma.config.ts (Prisma 7+), not here
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// 👇 Add your models here. Example:
+// model User {
+//   id        String   @id @default(uuid())
+//   email     String   @unique
+//   password  String
+//   username  String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
