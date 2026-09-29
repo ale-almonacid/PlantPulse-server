@@ -12,12 +12,27 @@ datasource db {
   provider = "postgresql"
 }
 
-// 👇 Add your models here. Example:
-// model User {
-//   id        String   @id @default(uuid())
-//   email     String   @unique
-//   password  String
-//   username  String
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
+// Models 
+
+model Plant {
+  id             String @id @default(uuid()) @db.Uuid
+  name           String @db.VarChar(100)
+  species        String @db.VarChar(150)
+  wateringAmount Int    @map("watering_amount")
+  frequency      Int
+
+  waterLogs      WaterLog[]
+
+  @@map("plants")
+}
+
+model WaterLog {
+  id      String   @id @default(uuid()) @db.Uuid
+  plantId String   @map("plant_id") @db.Uuid
+  date    DateTime @default(now())
+
+  plant   Plant    @relation(fields: [plantId], references: [id], onDelete: Cascade)
+
+  @@map("water_logs")
+}
+
