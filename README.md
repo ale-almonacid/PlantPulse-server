@@ -150,7 +150,7 @@ On Supabase, both URLs are in **Project → Connect**. Replace `[YOUR-PASSWORD]`
 ## 6. Gotchas
 
 - **Imports need the `.js` extension**, even for `.ts` files: `import prisma from "../db/index.js"`. This is how Node's ES modules work with TypeScript.
-- **No `try/catch` needed in async routes.** Express 5 sends rejected promises to the error handler in `errors/index.ts` automatically.
+- **Async errors go to `errors/index.ts`.** Use `try { ... } catch (error) { next(error) }` in routes. (Express 5 would also forward uncaught async errors automatically, but the explicit `catch` makes it clear.) That file also turns common Prisma errors into `400` or `404`.
 - **`import "dotenv/config"` must stay the first line of `server.ts`.** Imports run before the rest of the code, so `.env` has to load first.
 - **Don't add `url` / `directUrl` to `schema.prisma`.** Supabase's Prisma snippet (and older tutorials) show them, but Prisma 7 rejects them (error `P1012`). Only the variables go in `.env`. `prisma.config.ts` and `db/index.ts` already read them.
 - **Keep the Prisma package versions equal.** `prisma`, `@prisma/client` and `@prisma/adapter-pg` must be the same version. If you update one, update all three.

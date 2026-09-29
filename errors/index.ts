@@ -1,4 +1,5 @@
 import type { Express, Request, Response, NextFunction } from "express";
+import { Prisma } from "../generated/prisma/client.js";
 
 // ℹ️ Middleware to handle 404 and generic errors in the application
 
@@ -13,12 +14,32 @@ function handleErrors(app: Express) {
     // always logs the error
     console.error("ERROR", req.method, req.path, err);
 
-    // Sends a generic server error response if headers haven't been sent
-    if (!res.headersSent) {
-      res.status(500).json({
-        message: "Internal server error. Check the server console for details",
-      });
+    if (res.headersSent) return;
+
+    // ℹ️ Known Prisma errors => clearer status codes. Full list: https://pris.ly/d/prisma-errors
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      if (err.code === "P2025") {
+        res.status(404).json({ message: "Record not found" });
+        return;
+      }
+      if (err.code === "P2003") {
+        res.status(400).json({ message: "Related record does not exist (check the ids you sent)" });
+        return;
+      }
+      if (err.code === "P2007") {
+        res.status(400).json({ message: "Invalid data format (e.g. an id that is not a valid UUID)" });
+        return;
+      }
     }
+    if (err instanceof Prisma.PrismaClientValidationError) {
+      res.status(400).json({ message: "Invalid data sent (check field names and types)" });
+      return;
+    }
+
+    // Sends a generic server error response
+    res.status(500).json({
+      message: "Internal server error. Check the server console for details",
+    });
   });
 }
 
