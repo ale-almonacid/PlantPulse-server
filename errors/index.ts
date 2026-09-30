@@ -1,5 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
+import multer from "multer";
 import { Prisma } from "../generated/prisma/client.js";
+import { InvalidFileTypeError } from "../middleware/cloudinary.middleware.js";
 
 // ℹ️ Middleware to handle 404 and generic errors in the application
 
@@ -30,6 +32,19 @@ function handleErrors(app: Express) {
         res.status(400).json({ message: "Invalid data format (e.g. an id that is not a valid UUID)" });
         return;
       }
+    }
+    // ℹ️ File upload errors (multer) => 400 with a clear message
+    if (err instanceof multer.MulterError) {
+      const messages: Record<string, string> = {
+        LIMIT_UNEXPECTED_FILE: `Unexpected file field "${err.field}". Send the image in a field called "image"`,
+        LIMIT_FILE_SIZE: "Image is too big (max 5 MB)",
+      };
+      res.status(400).json({ message: messages[err.code] ?? err.message });
+      return;
+    }
+    if (err instanceof InvalidFileTypeError) {
+      res.status(400).json({ message: err.message });
+      return;
     }
     if (err instanceof Prisma.PrismaClientValidationError) {
       res.status(400).json({ message: "Invalid data sent (check field names and types)" });
