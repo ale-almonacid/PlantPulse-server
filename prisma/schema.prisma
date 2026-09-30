@@ -18,7 +18,7 @@ model Plant {
   id             String  @id @default(uuid()) @db.Uuid
   name           String  @db.VarChar(100)
   species        String  @db.VarChar(150)
-  wateringAmount Int     @map("watering_amount")
+  wateringAmount String  @map("watering_amount") @db.VarChar(100)
   frequency      Int
   imageUrl       String? @map("image_url")
   imagePublicId  String? @map("image_public_id")

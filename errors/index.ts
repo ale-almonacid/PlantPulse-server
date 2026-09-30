@@ -20,6 +20,10 @@ function handleErrors(app: Express) {
 
     // ℹ️ Known Prisma errors => clearer status codes. Full list: https://pris.ly/d/prisma-errors
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      if (err.code === "P2000") {
+        res.status(400).json({ message: "A value is too long (max: name 100, species 150, wateringAmount 100 characters)" });
+        return;
+      }
       if (err.code === "P2025") {
         res.status(404).json({ message: "Record not found" });
         return;

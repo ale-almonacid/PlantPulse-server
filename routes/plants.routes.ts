@@ -51,7 +51,7 @@ router.post("/", uploadImage.single("image"), async (req, res, next) => {
   const { name, species, wateringAmount, frequency } = req.body;
 
   // all fields are required (image is optional)
-  if (!name || !species || wateringAmount === undefined || frequency === undefined) {
+  if (!name || !species || !wateringAmount || frequency === undefined) {
     res.status(400).json({ errorMessage: "name, species, wateringAmount and frequency are mandatory" });
     return;
   }
@@ -64,7 +64,7 @@ router.post("/", uploadImage.single("image"), async (req, res, next) => {
       data: {
         name,
         species,
-        wateringAmount: toNumber(wateringAmount) as number,
+        wateringAmount, // free text: "500ml", "a glass"...
         frequency: toNumber(frequency) as number,
         imageUrl: image?.secure_url,
         imagePublicId: image?.public_id,
@@ -97,7 +97,7 @@ router.put("/:id", uploadImage.single("image"), async (req, res, next) => {
       data: {
         name,
         species,
-        wateringAmount: toNumber(wateringAmount),
+        wateringAmount,
         frequency: toNumber(frequency),
         imageUrl: image?.secure_url,
         imagePublicId: image?.public_id,

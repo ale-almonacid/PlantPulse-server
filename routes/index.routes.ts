@@ -10,4 +10,7 @@ router.use("/plants", plantsRouter);
 import waterLogsRouter from "./waterLogs.routes.js";
 router.use("/water-logs", waterLogsRouter);
 
+import speciesRouter from "./species.routes.js";
+router.use("/species", speciesRouter);
+
 export default router;
