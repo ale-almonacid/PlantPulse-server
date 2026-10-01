@@ -134,7 +134,7 @@ Base URL: `http://localhost:5005/api`
 | `species` | text | required | optional |
 | `wateringAmount` | text | required | optional |
 | `frequency` | number | required | optional |
-| `image` | **file** (jpg, png, webp, gif, avif, heic · max 5 MB) | optional | optional, replaces the old image |
+| `image` | **file** (jpg, png, webp, gif, avif, heic · max 10 MB) | optional | optional, replaces the old image |
 
 > The file field must be called **`image`**. `imageUrl` is returned by the server and is never sent by the client.
 
@@ -205,11 +205,11 @@ Details response:
 
 ## Errors
 
-Every error returns JSON with a message. Routes use `errorMessage`, and the central error handler uses `message`, so check both on the client.
+Every error returns JSON in the same shape: `{ "errorMessage": "..." }`.
 
 | Status | When |
 |---|---|
-| `400` | Missing or invalid fields, invalid id (not a UUID), text too long, `plantId` that doesn't exist, file that is not an image or is over 5 MB, file sent in a field other than `image` |
+| `400` | Missing or invalid fields, invalid id (not a UUID), text too long, `plantId` that doesn't exist, file that is not an image or is over 10 MB, file sent in a field other than `image` |
 | `403` | Species needs a Perenual premium plan |
 | `404` | Plant or log not found, or the route does not exist |
 | `429` | Perenual daily limit reached |

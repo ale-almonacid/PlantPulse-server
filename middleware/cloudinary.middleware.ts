@@ -13,7 +13,7 @@ class InvalidFileTypeError extends Error {}
 // Multer reads the file from the form-data request and keeps it in memory (req.file.buffer)
 const uploadImage = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB (Cloudinary free plan max)
   fileFilter: (req, file, cb) => {
     // only accept images. Checks the type AND the extension (some clients send images as "application/octet-stream")
     const isImage = file.mimetype.startsWith("image/") || /\.(jpe?g|png|webp|gif|avif|heic)$/i.test(file.originalname);

@@ -8,9 +8,10 @@ function config(app: Express) {
   app.set("trust proxy", 1);
 
   // ℹ️ Configures CORS to allow requests only from the specified origin
+  // (browsers send the origin without a final "/", so one in ORIGIN is removed)
   app.use(
     cors({
-      origin: [process.env.ORIGIN as string],
+      origin: [(process.env.ORIGIN ?? "").replace(/\/+$/, "")],
     })
   );
 
