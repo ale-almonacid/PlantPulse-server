@@ -17,10 +17,12 @@ async function deleteImage(publicId: string | null) {
   }
 }
 
-// GET "/api/plants" => get all plants
+// GET "/api/plants" => get all plants (with their last water log, to know when to water next)
 router.get("/", async (req, res, next) => {
   try {
-    const plants = await prisma.plant.findMany();
+    const plants = await prisma.plant.findMany({
+      include: { waterLogs: { orderBy: { date: "desc" }, take: 1 } },
+    });
     res.status(200).json(plants);
   } catch (error) {
     next(error);

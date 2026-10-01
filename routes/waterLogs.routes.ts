@@ -10,7 +10,7 @@ router.get("/", async (req, res, next) => {
   try {
     const waterLogs = await prisma.waterLog.findMany({
       where: typeof plantId === "string" ? { plantId } : {},
-      include: { plant: { select: { id: true, name: true } } },
+      include: { plant: { select: { id: true, name: true, species: true, wateringAmount: true, imageUrl: true } } },
       orderBy: { date: "desc" },
     });
 
